@@ -518,11 +518,16 @@ body.r2-lock { overflow: hidden; }
 		transform: translateY(24px);
 		animation: r2-rise .9s var(--r2-ease) forwards;
 	}
+	/* delays line up with the loader's slide-up (see loader.css) */
 	.r2-hero__content > :nth-child(1) { animation-delay: .9s; }
 	.r2-hero__content > :nth-child(2) { animation-delay: 1.0s; }
 	.r2-hero__content > :nth-child(3) { animation-delay: 1.15s; }
 	.r2-hero__content > :nth-child(4) { animation-delay: 1.3s; }
 	.r2-hero__sectors { opacity: 0; animation: r2-fade 1s ease 1.5s forwards; }
+
+	/* hold the entrance until the loader starts leaving */
+	.r2-js:not(.r2-ready) .r2-hero__content > *,
+	.r2-js:not(.r2-ready) .r2-hero__sectors { animation-play-state: paused; }
 }
 @keyframes r2-rise { to { opacity: 1; transform: none; } }
 @keyframes r2-fade { to { opacity: 1; } }
