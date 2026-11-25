@@ -2,7 +2,7 @@
 
 The one-page website for **Rsquared Holding**, a diversified family business founded in 1981, and its six group companies: Construction, Trade, Development, Investment, Skylight (hotels & resorts) and Egyment (agriculture).
 
-It is a static site: one `index.html` with CSS, JavaScript and images. There is no build step, framework or server code.
+It is a static site: one `index.html` with plain CSS, JavaScript and images. There is no build step, no framework and no third-party JavaScript library.
 
 ---
 
@@ -22,43 +22,58 @@ An internet connection is needed for the **Manrope** web font and the **Google M
 
 ## Deploy
 
-Upload the whole folder to any static host (cPanel, Netlify, GitHub Pages, S3…). Keep the folder structure as it is; all paths are relative.
+Upload the whole folder to any static host (cPanel, Netlify, GitHub Pages, S3…). Keep the folder structure as it is; all paths are relative. `favicon.ico` and `site.webmanifest` must stay at the root.
 
 ---
 
 ## Project structure
 
 ```
-index.html            the whole page
-css/
-  theme.css           colour tokens for light + dark themes, theme toggle  ← start here
-  header.css          navbar, hero, buttons, layout tokens
-  focus.css           "Our Focus" + shared section header pattern
-  companies.css       the six group-company sections + photo carousel
-  about.css           About Us timeline + client logo slider
-  team.css            Our Team carousel + credentials dialog
-  contact.css         Contact section + footer
-  loader.css          page loader
-  styles.css, responsive.css, bootstrap.min.css, …   legacy template files (see below)
-js/
-  theme.js            light/dark theme (loads in <head>)
-  loader.js           page loader (loads in <head>)
-  header.js           navbar behaviour
-  companies.js        Trade brand tabs + photo carousels (also used by Our Team)
-  team.js             credentials dialogs
-  contact.js          contact form, footer year, back-to-top
-  zerif.js, java.js, jquery*, wow.min.js, …           legacy template scripts
-images/               photos and logos (see "Editing content")
+index.html                 the whole page
+favicon.ico                16/32/48 px favicon (browsers request /favicon.ico)
+site.webmanifest           name + icons for "Add to home screen"
+README.md
+assets/
+  css/
+    theme.css              colour tokens (light + dark) and the theme toggle  ← start here
+    base.css               reset, page defaults, scroll-reveal animation
+    header.css             layout tokens, navbar, hero, buttons
+    focus.css              Our Focus + shared section header pattern
+    companies.css          the six company sections + photo carousel
+    about.css              About Us timeline + client logo slider
+    team.css               Our Team carousel + credentials dialog
+    contact.css            Contact section + footer
+    loader.css             page loader
+  js/
+    theme.js               light/dark theme (loads in <head>)
+    loader.js              page loader (loads in <head>)
+    header.js              navbar behaviour
+    companies.js           Trade brand tabs + photo carousels (also used by Our Team)
+    team.js                credentials dialogs
+    contact.js             contact form, footer year, back-to-top
+    reveal.js              fade-up animation when sections scroll into view
+  icons/                   favicon PNGs, apple-touch-icon, manifest icons
+  images/
+    brand/                 logo-mark.png (R² Holding logo)
+    hero/                  hero-1..3.jpg (hero background slideshow)
+    focus/                 construction, trade, hotels, agriculture
+    companies/
+      construction/        logo + project-01..12
+      trade/               logo + lintec-1..4, optimas-1..4, mb-crusher-1..4
+      development/         logo + project-01..08
+      investment/          logo
+      skylight/            logo + photo-01..12
+      egyment/             logo + farm photos
+    clients/               one logo per client, named after the client
+    team/                  one portrait per person, named after the person + placeholder.svg
 ```
 
-### New design vs. legacy template
+### Conventions
 
-The site started from the *Zerif* one-page template. Every visible section has since been redesigned. The new code lives in the files listed above and follows two rules:
-
-- **Everything is prefixed `r2-`** (`.r2-nav`, `.r2-hero`, `.r2-card` …), so it never collides with template classes.
-- **All colours come from tokens** in `css/theme.css`. Never hard-code a colour in a component; use or add a token.
-
-The template files (`styles.css`, `responsive.css`, Bootstrap, jQuery plugins, `zerif.js`) are **still loaded**. They no longer style any visible section, but some of their global rules are actively overridden by the new CSS (see [Legacy guards](#legacy-guards)). Removing them is part of the planned full redesign.
+- **File names** are lowercase with hyphens, no spaces (`ahmed-mokhtar.jpg`, not `ahmed mokhtar.jpeg`).
+- **Classes are prefixed `r2-`** (`.r2-nav`, `.r2-hero`, `.r2-card` …).
+- **All colours come from tokens** in `assets/css/theme.css`. Never hard-code a colour that should change with the theme; use or add a token.
+- **No dependencies.** Every script is plain JavaScript and does nothing if its section is missing.
 
 ---
 
@@ -81,7 +96,7 @@ The template files (`styles.css`, `responsive.css`, Bootstrap, jQuery plugins, `
 | Contact | `#contact` | Contact us | `contact.css`, `contact.js` | Contact methods, form, map. |
 | Footer | — | — | `contact.css`, `contact.js` | Always dark. |
 
-> Some anchors keep their template names (`#works`, `#pricingtable`, `#features`, `#testimonials`, `#products`) so existing links keep working. If you rename one, update the navbar, the hero sector strip, the footer and the `data-section` attribute on the "Businesses" nav item.
+> Some anchors keep their original names (`#works`, `#pricingtable`, `#features`, `#testimonials`, `#products`) so existing links keep working. If you rename one, update the navbar, the hero sector strip, the footer and the `data-section` attribute on the "Businesses" nav item.
 
 ---
 
@@ -89,19 +104,38 @@ The template files (`styles.css`, `responsive.css`, Bootstrap, jQuery plugins, `
 
 All content is plain HTML in `index.html`. Search for the section's comment banner (e.g. `<!-- 02 · TRADE -->`).
 
-**Add a project photo** (Construction / Development / Egyment): copy one `<li>` inside that section's `<ul class="r2-gallery">` and change `src`, `alt` and the caption. Photos are shown at 4:3; 800×600 or larger looks best.
+**Page title, description and sharing text:** the `<title>`, `<meta name="description">` and `og:*` tags at the top of `index.html`.
 
-**Add a team member:** copy one `<li>` inside `#team .r2-strip__track`.
-- No photo yet? Use `src="images/team/placeholder.svg"` with `class="is-placeholder"` and an empty `alt=""`.
+**Add a project photo** (Construction / Development / Egyment): put the file in `assets/images/companies/<company>/`, then copy one `<li>` inside that section's `<ul class="r2-gallery">` and change `src`, `alt` and the caption. Photos are shown at 4:3; 800×600 or larger looks best.
+
+**Add a team member:** put the portrait in `assets/images/team/firstname-lastname.jpg`, then copy one `<li>` inside `#team .r2-strip__track`.
+- No photo yet? Use `src="assets/images/team/placeholder.svg"` with `class="is-placeholder"` and an empty `alt=""`.
 - Photo on a pure white background? Add `class="is-cutout"` so the card colour shows through.
 - Credentials: add a `<button class="r2-member__more" data-r2-dialog="r2-dlg-NAME">` in the card and a matching `<dialog id="r2-dlg-NAME">` (copy an existing one at the end of the section).
 - Update the count in "Leadership, board and executive team — 9 people."
 
-**Add a client logo:** add an `<li class="r2-logo">` to **both** lists in `#clients .r2-marquee`. The second list is an `aria-hidden` copy that makes the loop seamless. Logos display best around 400×160 px, ideally PNG/SVG.
+**Add a client logo:** put the file in `assets/images/clients/client-name.png`, then add an `<li class="r2-logo">` to **both** lists in `#clients .r2-marquee`. The second list is an `aria-hidden` copy that makes the loop seamless. Logos display best around 400×160 px, ideally PNG/SVG.
 
 **Change contact details:** the address, email and phone appear in the contact section, the form's `data-to` attribute, the map card and the footer. Search for `info@ecic.co` / `+20244875070` / `El-Obour`.
 
-**Change colours:** edit the tokens in `css/theme.css` (see [Colour tokens](#colour-tokens)).
+**Change colours:** edit the tokens in `assets/css/theme.css` (see [Colour tokens](#colour-tokens)).
+
+**Animate an element in on scroll:** add `data-reveal` (optionally `data-reveal-delay=".1s"`).
+
+---
+
+## Favicon and app icons
+
+The favicon is the R² mark in white on a dark rounded tile, so it reads on both light and dark browser tabs.
+
+| File | Size | Used by |
+|---|---|---|
+| `favicon.ico` | 16, 32, 48 | All browsers (requested at the site root) |
+| `assets/icons/favicon-16.png`, `favicon-32.png`, `favicon-48.png` | — | Browser tabs, bookmarks |
+| `assets/icons/apple-touch-icon.png` | 180 | iPhone / iPad home screen (iOS rounds the corners) |
+| `assets/icons/icon-192.png`, `icon-512.png` | 192, 512 | Android home screen via `site.webmanifest` (full-bleed, maskable) |
+
+To regenerate them, start from `assets/images/brand/logo-mark.png`: crop to the R² mark (without "HOLDING"), make it white, centre it at ~70% on a `#141414` tile. Use rounded corners for the small favicons and square tiles for the 180/192/512 icons.
 
 ---
 
@@ -121,7 +155,7 @@ How it works: `theme.css` defines the light tokens on `:root` and the dark token
 :root[data-theme="dark"] { /* dark tokens */ }            /* visitor chose dark */
 ```
 
-`js/theme.js` runs in `<head>` before the page paints. It sets `data-theme` only when the visitor has chosen, and always sets `data-theme-effective` (used for the toggle icon and the map hover).
+`theme.js` runs in `<head>` before the page paints. It sets `data-theme` only when the visitor has chosen, and always sets `data-theme-effective` (used for the toggle icon and the map hover).
 
 ---
 
@@ -129,19 +163,15 @@ How it works: `theme.css` defines the light tokens on `:root` and the dark token
 
 ### Load order
 
-Tokens first, legacy files before the new ones so the new rules win:
-
 ```
-legacy:  bootstrap.min.css, all.min.css, owl.*.css, jquery.vegas.min.css, animate.min.css,
-         assets/icon-fonts/styles.css, pixeden-icons.css, styles.css, responsive.css
-new:     theme.css, header.css, focus.css, companies.css, about.css, team.css, contact.css, loader.css
+theme.css → base.css → header.css → focus.css → companies.css → about.css → team.css → contact.css → loader.css
 ```
 
 ### Layout tokens (`header.css`)
 
 | Token | Value | Use |
 |---|---|---|
-| `--r2-font` | Manrope, system fallbacks | All new text |
+| `--r2-font` | Manrope, system fallbacks | All text |
 | `--r2-container` | `1240px` | Max content width (`.r2-container`) |
 | `--r2-gutter` | `clamp(20px, 4vw, 40px)` | Side padding |
 | `--r2-nav-h` / `--r2-nav-h-scrolled` | `88px` / `70px` (76/64 on mobile) | Navbar heights, anchor offset |
@@ -149,7 +179,7 @@ new:     theme.css, header.css, focus.css, companies.css, about.css, team.css, c
 
 ### Colour tokens
 
-Defined in `theme.css`. Components never use raw colours for anything that should change with the theme. Raw `#fff` / `rgba(255,255,255,…)` is only used inside always-dark areas and on top of photos.
+Defined in `theme.css`. Raw `#fff` / `rgba(255,255,255,…)` is only used inside always-dark areas and on top of photos.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
@@ -190,34 +220,23 @@ Effect tokens: `--r2-logo-filter`, `--r2-cutout-blend`, `--r2-placeholder-filter
 | `.r2-strip` (+ `__track`, `__btn`, `__progress`) | companies.css | Horizontal scroll-snap carousel (Skylight, Our Team) |
 | `.r2-marquee`, `.r2-logo` | about.css | Infinite logo slider |
 | `.r2-dialog` | team.css | Modal built on `<dialog>` |
+| `[data-reveal]` | base.css | Fade-up on scroll |
 
 ### Breakpoints and motion
 
-Breakpoints match Bootstrap 5: `1199.98px`, `991.98px` (navbar becomes the mobile menu), `767.98px`, `575.98px`; a few small-phone tweaks use `420px`.
+Breakpoints: `1199.98px`, `991.98px` (navbar becomes the mobile menu), `767.98px`, `575.98px`; a few small-phone tweaks use `420px`.
 
-Every animation respects `prefers-reduced-motion: reduce`: hero slides stop, the marquee becomes a static list, the loader fades instead of sliding, and entrance animations are skipped.
-
-### Legacy guards
-
-The template's global rules leak into the new design. These overrides exist only because of them; delete them together with the legacy files:
-
-- `header.css`: `nav ul li a` colour/size overrides, `nav { box-shadow }` reset, hero `.r2-hero__sectors` guards.
-- `contact.css`: footer link colour guards, `!important` on form field borders.
-- `theme.css`: `html { font-size: 100% }` (responsive.css shrinks it to 90% / 70% / 62.5% on small screens).
-- `!important` on `.r2-section-title` font sizes (responsive.css forces `h2 { font-size: 6.5vw !important }` on mobile).
+Every animation respects `prefers-reduced-motion: reduce`: hero slides stop, the marquee becomes a static list, the loader fades instead of sliding, and scroll reveals are skipped.
 
 ---
 
 ## JavaScript
 
-The new scripts are plain JavaScript with no dependencies. Each one is self-contained and does nothing if its section is missing.
-
 ### Load order
 
 ```
-<head>:        theme.js (before paint, avoids a wrong-theme flash), then CSS, then loader.js
-end of <body>: legacy (bootstrap, jquery, scrollTo, wow, jquery.nav, knob, owl, vegas, zerif.js, java.js)
-               then header.js, companies.js, team.js, contact.js
+<head>:        theme.js (before paint, avoids a wrong-theme flash), CSS, loader.js
+end of <body>: header.js, companies.js, team.js, contact.js, reveal.js
 ```
 
 ### What each script does
@@ -230,27 +249,21 @@ end of <body>: legacy (bootstrap, jquery, scrollTo, wow, jquery.nav, knob, owl, 
   - `[data-r2-strip]` carousels get prev/next buttons (`[data-dir]`), a progress bar and mouse drag-to-scroll (touch scrolls natively). A drag never triggers a card button.
 - **`team.js`**: `data-r2-dialog="ID"` buttons open `<dialog id="ID">`; closes on `[data-r2-close]`, Esc or backdrop click.
 - **`contact.js`**: `[data-r2-contact-form]` validates and opens a pre-filled `mailto:` to the form's `data-to`; `[data-r2-year]` prints the current year; `[data-r2-totop]` scrolls to top.
-
-### Legacy scripts
-
-- **`zerif.js` is still needed**: it runs `new WOW().init()`, which drives the `wow fadeInUp` scroll animations used in the new sections. Keep WOW (or replace it with an `IntersectionObserver`) before removing the legacy files. It also starts the old Vegas background slideshow, which is now hidden behind the redesigned sections.
-- `java.js`, `jquery.nav.js`, `jquery.knob.js`, `owl.carousel.min.js`, `jquery.scrollTo.min.js` and Bootstrap JS are not used by the new design.
+- **`reveal.js`**: `[data-reveal]` elements fade up the first time they enter the viewport (`IntersectionObserver`). Without JS or with reduced motion, everything is simply visible.
 
 ---
 
 ## Contact form
 
-The site has no backend, so **Send message** opens the visitor's email app with a pre-filled message to `info@ecic.co`. To receive messages directly, point the form at a form service (Formspree, Basin, Netlify Forms…) or your own endpoint and replace the `submit` handler in `js/contact.js`.
+The site has no backend, so **Send message** opens the visitor's email app with a pre-filled message to `info@ecic.co`. To receive messages directly, point the form at a form service (Formspree, Basin, Netlify Forms…) or your own endpoint and replace the `submit` handler in `assets/js/contact.js`.
 
 ---
 
 ## Known issues / to-do
 
-- `images/focus/10.gif` is **~50 MB** and is not used anywhere. Delete it or keep it out of deployments.
-- Several logos are very large files (`images/Navbar logomain1.png` ≈ 580 KB at 6360×8136; `logoDEVLOPMENT-1.png`, `logoINVESTMENT-1.png` ≈ 3150 px). Export small PNG/SVG versions.
-- Hero backgrounds (`images/backgrounds/bg1–3.jpg`) are 0.8–1.8 MB each; compress or serve WebP.
-- Project photos in `images/portfolio/` are only 400×300; higher-resolution originals would look much sharper.
+- Several images are heavier than they need to be: `assets/images/brand/logo-mark.png` (≈ 580 KB, 6360×8136), the Development/Investment logos (≈ 3150 px), and the hero photos (0.8–1.8 MB each). Export smaller versions / WebP.
+- Project photos are only 400×300; higher-resolution originals would look much sharper.
 - Board members Mamdouh El Faki, Ashraf Abd El Aziz and Sarah Abdel Raouf use the placeholder portrait.
-- Egyment's acreage is stated differently in older copy (2,000 vs 4,000 acres); the Egyment section currently avoids stating it. Confirm and update.
+- Egyment's acreage appears as both 2,000 and 4,000 acres in older copy; the Egyment section currently avoids stating it. Confirm and update.
 - Contact email is on the `ecic.co` domain; update if there is a Rsquared address.
-- Legacy template CSS/JS is still loaded (see [New design vs. legacy template](#new-design-vs-legacy-template)).
+- No `og:image` yet: add a 1200×630 social preview image and an `og:url` once the final domain is known.
