@@ -43,7 +43,7 @@ assets/
     about.css              About Us timeline + client logo slider
     team.css               Our Team carousel + credentials dialog
     contact.css            Contact section + footer
-    loader.css             page loader
+    loader.css             page loader (the R² mark builds itself)
   js/
     theme.js               light/dark theme (loads in <head>)
     loader.js              page loader (loads in <head>)
@@ -54,7 +54,7 @@ assets/
     reveal.js              fade-up animation when sections scroll into view
   icons/                   favicon PNGs, apple-touch-icon, manifest icons
   images/
-    brand/                 logo-mark.png (R² Holding logo)
+    brand/                 logo-mark.png (R² Holding logo), mark.png (R² only, loader)
     hero/                  hero-1..3.jpg (hero background slideshow)
     focus/                 construction, trade, hotels, agriculture
     companies/
@@ -242,7 +242,7 @@ end of <body>: header.js, companies.js, team.js, contact.js, reveal.js
 ### What each script does
 
 - **`theme.js`**: follows the OS theme by default; `.r2-theme-toggle` switches and saves the choice (`localStorage` `r2-theme`, in-memory fallback if storage is blocked). Updates `<meta name="theme-color">` and the toggle's `aria-label` / `aria-pressed`.
-- **`loader.js`**: adds `r2-js r2-loading` to `<html>`, then hides the loader once the DOM, fonts and the **first hero photo** are ready (minimum 1.4 s, 0.4 s on repeat visits; maximum 4 s; CSS fallback at 8 s if JS fails). Adds `r2-ready`, which starts the hero entrance.
+- **`loader.js`**: adds `r2-js r2-loading` to `<html>`, then hides the loader once the DOM, fonts and the **first hero photo** are ready (minimum 1.4 s, 0.4 s on repeat visits; maximum 4 s; CSS fallback at 8 s if JS fails). Adds `r2-ready`, which starts the hero entrance. The loader animation (bars rise → R is drawn → ² drops in) is pure CSS in `loader.css`; the mark shape is `mark.png` inlined there as a data URI so it also works when the page is opened from disk.
 - **`header.js`**: `.is-scrolled` after 24 px; mobile menu (Esc / link click closes, body scroll lock); "Businesses" dropdown; highlights the current section's nav link via `IntersectionObserver` and each link's `data-section` (space-separated ids).
 - **`companies.js`**:
   - `[data-r2-tabs]` turns stacked panels into ARIA tabs (arrow / Home / End keys).
