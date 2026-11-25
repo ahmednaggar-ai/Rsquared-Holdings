@@ -438,3 +438,16 @@
 	.r2-strip__track { grid-auto-columns: 82%; }
 	.r2-tile--note li { font-size: 1.1rem; }
 }
+
+/* Mouse drag-to-scroll (js/companies.js) */
+@media (hover: hover) and (pointer: fine) {
+	.r2-strip__track { cursor: grab; }
+}
+.r2-strip__track.is-dragging {
+	cursor: grabbing;
+	scroll-snap-type: none;
+	scroll-behavior: auto;
+	user-select: none;
+	-webkit-user-select: none;
+}
+.r2-strip__track img { -webkit-user-drag: none; user-select: none; }

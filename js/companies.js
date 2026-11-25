@@ -69,5 +69,47 @@
 		track.addEventListener('scroll', update, { passive: true });
 		window.addEventListener('resize', update);
 		update();
+
+		/* ---- Mouse drag to scroll (touch already scrolls natively) ---- */
+		var drag = null;
+		var suppressClick = false;
+
+		track.addEventListener('pointerdown', function (e) {
+			if (e.pointerType !== 'mouse' || e.button !== 0) return;
+			drag = { x: e.clientX, left: track.scrollLeft, moved: false, id: e.pointerId };
+		});
+		track.addEventListener('pointermove', function (e) {
+			if (!drag || e.pointerId !== drag.id) return;
+			var dx = e.clientX - drag.x;
+			if (!drag.moved && Math.abs(dx) > 5) {
+				drag.moved = true;
+				track.classList.add('is-dragging');      // turns snapping off while dragging
+				try { track.setPointerCapture(drag.id); } catch (err) { /* capture is optional */ }
+			}
+			if (drag.moved) {
+				e.preventDefault();
+				track.scrollLeft = drag.left - dx;
+			}
+		});
+		function endDrag() {
+			if (!drag) return;
+			var moved = drag.moved;
+			drag = null;
+			if (!moved) return;
+			suppressClick = true;                      // a drag must not trigger card buttons
+			setTimeout(function () { suppressClick = false; }, 0);
+			// settle on the nearest card, then hand control back to CSS snapping
+			var s = step();
+			var target = Math.round(track.scrollLeft / s) * s;
+			track.scrollTo({ left: target, behavior: 'smooth' });
+			setTimeout(function () { track.classList.remove('is-dragging'); }, 400);
+		}
+		track.addEventListener('pointerup', endDrag);
+		track.addEventListener('pointercancel', endDrag);
+		track.addEventListener('lostpointercapture', endDrag);
+		track.addEventListener('click', function (e) {
+			if (suppressClick) { e.preventDefault(); e.stopPropagation(); }
+		}, true);
+		track.addEventListener('dragstart', function (e) { e.preventDefault(); });   // no ghost-image drag
 	});
 })();
