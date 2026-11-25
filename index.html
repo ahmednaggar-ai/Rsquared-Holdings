@@ -34,8 +34,12 @@
 <!-- CUSTOM STYLES -->
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/header.css">
 
 <!-- WEBFONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,400italic|Montserrat:700,400|Homemade+Apple' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet"> -->
 
@@ -64,95 +68,86 @@
 
 
 
-<header id="home" class="header">
-	<!-- start of navbar -->
-	<nav class="navbar navbar-expand-lg navbar-light bgcolor fixed-top bgcolor">
-		<div class="container">
-			<a class="navbar-brand d-flex align-items-center fw-bolder fs-5" href="#">
-				<img src="images/Navbar logomain1.png" id="main-logo" alt="Zerif" width="70" height="70"> 
-			</a>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-			<span class="sr-only"><i class="fas fa-sliders-h"></i></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
+<!-- =========================
+	NAVBAR (r2-nav) — see css/header.css + js/header.js
+============================== -->
+<nav class="r2-nav" aria-label="Main">
+	<div class="r2-container r2-nav__inner">
+		<a class="r2-nav__brand" href="#home" aria-label="Rsquared Holding — home">
+			<img src="images/Navbar logomain1.png" alt="" width="41" height="52">
+			<span class="r2-nav__brand-text"><strong>RSQUARED</strong><span>Holding</span></span>
+		</a>
+
+		<button class="r2-burger" type="button" aria-controls="r2-menu" aria-expanded="false" aria-label="Open menu">
+			<span></span><span></span><span></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav  ms-auto">
-			<li class="nav-item">
-				<a class="nav-link active" aria-current="page" href="#">Home</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#focus">Focus</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#works">Construction</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#trade">Trade</a>
-			</li>
-			<!-- <li class="nav-item">
-				<a class="nav-link" href="#manfacturing">Industrial</a>
-			</li> -->
-			<li class="nav-item">
-				<a class="nav-link" href="#pricingtable">Development</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#features">Investment</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#testimonials">Hotels</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#products">Agriculture</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#aboutus">About Us</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#team">Team</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#contact">Contact</a>
-			</li>
+
+		<div class="r2-nav__panel" id="r2-menu">
+			<ul class="r2-nav__menu">
+				<li><a class="r2-nav__link" href="#focus" data-section="focus">Our Focus</a></li>
+				<li class="r2-has-dropdown">
+					<a class="r2-nav__link" href="#works" role="button" aria-haspopup="true" aria-expanded="false" data-section="works trade pricingtable features testimonials products">
+						Businesses
+						<svg class="r2-nav__chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					</a>
+					<div class="r2-dropdown">
+						<div class="r2-dropdown__panel">
+							<a href="#works"><span class="r2-dropdown__num">01</span><span><span class="r2-dropdown__title">Construction</span><span class="r2-dropdown__desc">Infrastructure, roads &amp; buildings</span></span></a>
+							<a href="#trade"><span class="r2-dropdown__num">02</span><span><span class="r2-dropdown__title">Trade</span><span class="r2-dropdown__desc">Heavy equipment &amp; plant dealership</span></span></a>
+							<a href="#pricingtable"><span class="r2-dropdown__num">03</span><span><span class="r2-dropdown__title">Development</span><span class="r2-dropdown__desc">Residential &amp; commercial real estate</span></span></a>
+							<a href="#features"><span class="r2-dropdown__num">04</span><span><span class="r2-dropdown__title">Investment</span><span class="r2-dropdown__desc">Positions in world markets</span></span></a>
+							<a href="#testimonials"><span class="r2-dropdown__num">05</span><span><span class="r2-dropdown__title">Hotels &amp; Resorts</span><span class="r2-dropdown__desc">Skylight for Tourism, Ain Sokhna</span></span></a>
+							<a href="#products"><span class="r2-dropdown__num">06</span><span><span class="r2-dropdown__title">Agriculture</span><span class="r2-dropdown__desc">Egyment agricultural development, Sudan</span></span></a>
+						</div>
+					</div>
+				</li>
+				<li><a class="r2-nav__link" href="#aboutus" data-section="aboutus">About Us</a></li>
+				<li><a class="r2-nav__link" href="#team" data-section="team">Team</a></li>
+				<li class="r2-nav__cta-item"><a class="r2-nav__link r2-btn r2-btn--nav" href="#contact">Contact us</a></li>
 			</ul>
 		</div>
+	</div>
+</nav>
+
+<!-- =========================
+	HERO (r2-hero)
+============================== -->
+<header id="home" class="r2-hero">
+	<div class="r2-hero__slides" aria-hidden="true">
+		<div class="r2-hero__slide" style="background-image:url('images/backgrounds/bg1.jpg')"></div>
+		<div class="r2-hero__slide" style="background-image:url('images/backgrounds/bg2.jpg')"></div>
+		<div class="r2-hero__slide" style="background-image:url('images/backgrounds/bg3.jpg')"></div>
+	</div>
+	<div class="r2-hero__shade" aria-hidden="true"></div>
+
+	<div class="r2-container r2-hero__content">
+		<p class="r2-hero__eyebrow">Rsquared Holding &middot; Since 1981</p>
+		<h1 class="r2-hero__title">A diversified <em>family</em> business.</h1>
+		<p class="r2-hero__lead">
+			From construction and trade to real estate, investment, hotels and agriculture &mdash;
+			we carry the same values, goals and objectives into every sector we work in.
+		</p>
+		<div class="r2-hero__actions">
+			<a class="r2-btn r2-btn--primary" href="#focus">
+				Explore our businesses
+				<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			</a>
+			<a class="r2-btn r2-btn--ghost" href="#aboutus">Our story</a>
+		</div>
+	</div>
+
+	<nav class="r2-hero__sectors" aria-label="Our businesses">
+		<div class="r2-container">
+			<ul>
+				<li><a href="#works"><small>01</small><span>Construction</span></a></li>
+				<li><a href="#trade"><small>02</small><span>Trade</span></a></li>
+				<li><a href="#pricingtable"><small>03</small><span>Development</span></a></li>
+				<li><a href="#features"><small>04</small><span>Investment</span></a></li>
+				<li><a href="#testimonials"><small>05</small><span>Hotels &amp; Resorts</span></a></li>
+				<li><a href="#products"><small>06</small><span>Agriculture</span></a></li>
+			</ul>
 		</div>
 	</nav>
-	<!-- / END TOP BAR -->
-	
-	<!-- BIG HEADING WITH CALL TO ACTION BUTTONS AND SHORT MESSAGES -->
-	<div class="container">
-		
-		<!-- HEADING -->
-		<h1 class="intro">A diversified family business</h1>
-		
-		<!-- CALL TO ACTION BUTTONS -->
-		
-		
-		<!-- 3 SHORT MESSAGE ABOUT COMPANY -->
-        <div class="row bottom-message-section">
-			<div class="col-lg-4 col-sm-4">
-				<div class="short-text">
-				</div>
-			</div>
-			<div class="col-lg-4 col-sm-4">
-				<div class="short-text">
-				</div>
-			</div>
-			<div class="col-lg-4 col-sm-4">
-				<div class="short-text">
-				</div>
-			</div>
-		</div><div class="col-lg-4 col-sm-4">
-				<div class="short-text">
-				</div>
-		<div class="col-lg-4 col-sm-4">
-				<div class="short-text">
-				</div>
-	</div> <!-- / END BIG HEADING WITH CALL TO ACTION BUTTONS AND SHORT MESSAGES  -->
-	
 </header> <!-- / END HOME SECTION  -->
 
 <!-- =========================
@@ -1955,6 +1950,7 @@
 <script src="js/jquery.vegas.min.js"></script>
 <script src="js/zerif.js"></script>
 <script src="js/java.js"></script>
+<script src="js/header.js"></script>
 
 </body>
 </html>
