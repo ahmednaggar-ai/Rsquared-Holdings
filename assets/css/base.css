@@ -65,3 +65,6 @@ button { text-transform: none; }
 	.r2-reveal-on [data-reveal]:not(.is-revealed) { opacity: 1; }
 	.r2-reveal-on [data-reveal].is-revealed { animation: none; }
 }
+
+/* Animated counters (js/counters.js): equal-width digits so numbers don't jitter */
+[data-count] { font-variant-numeric: tabular-nums; }

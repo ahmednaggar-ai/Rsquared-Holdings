@@ -52,6 +52,7 @@ assets/
     team.js                credentials dialogs
     contact.js             contact form, footer year, back-to-top
     reveal.js              fade-up animation when sections scroll into view
+    counters.js            numbers count up when they scroll into view
   icons/                   favicon PNGs, apple-touch-icon, manifest icons
   images/
     brand/                 logo-mark.png (R² Holding logo), mark.png (R² only, loader)
@@ -121,6 +122,10 @@ All content is plain HTML in `index.html`. Search for the section's comment bann
 **Change colours:** edit the tokens in `assets/css/theme.css` (see [Colour tokens](#colour-tokens)).
 
 **Animate an element in on scroll:** add `data-reveal` (optionally `data-reveal-delay=".1s"`).
+
+**Animated numbers:** wrap the number in `<span data-count="1000">1,000</span>`. Options: `data-count-from` (start value; years use the value − 40), `data-count-suffix` (`+`, `K`), `data-count-group` (adds the thousands comma). Keep the final value as the text so it still shows without JavaScript.
+
+**Animated numbers:** wrap the number in `<span data-count="1000">1,000</span>`. Options: `data-count-from` (start value; years use the value − 40), `data-count-suffix` ("+", "K"), `data-count-group` (adds the thousands comma). Keep the final value as the text so it shows without JS.
 
 ---
 
@@ -236,7 +241,7 @@ Every animation respects `prefers-reduced-motion: reduce`: hero slides stop, the
 
 ```
 <head>:        theme.js (before paint, avoids a wrong-theme flash), CSS, loader.js
-end of <body>: header.js, companies.js, team.js, contact.js, reveal.js
+end of <body>: header.js, companies.js, team.js, contact.js, reveal.js, counters.js
 ```
 
 ### What each script does
@@ -250,6 +255,7 @@ end of <body>: header.js, companies.js, team.js, contact.js, reveal.js
 - **`team.js`**: `data-r2-dialog="ID"` buttons open `<dialog id="ID">`; closes on `[data-r2-close]`, Esc or backdrop click.
 - **`contact.js`**: `[data-r2-contact-form]` validates and opens a pre-filled `mailto:` to the form's `data-to`; `[data-r2-year]` prints the current year; `[data-r2-totop]` scrolls to top.
 - **`reveal.js`**: `[data-reveal]` elements fade up the first time they enter the viewport (`IntersectionObserver`). Without JS or with reduced motion, everything is simply visible.
+- **`counters.js`**: `[data-count]` numbers count up (1.8 s, ease-out) the first time they are 60% visible; the final width is locked first so the layout doesn't shift. Skipped with reduced motion.
 
 ---
 
