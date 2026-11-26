@@ -1,10 +1,16 @@
 /* =======================================================================
    RSQUARED HOLDING — PAGE LOADER
    Load in <head> (not deferred) so the loader is set up before first paint.
-   Hides the loader once the page is usable — DOM ready, web fonts and the
-   first hero photo — instead of waiting for every image on the page.
-   Always shown for at least MIN ms (shorter on repeat visits in a session)
-   and never longer than MAX ms.
+
+   Keeps the loader up until EVERY image on the page has loaded:
+   all <img> (including loading="lazy" ones, which are preloaded so they
+   appear instantly when scrolled to) and inline background images (hero).
+   Also waits for the web fonts. The progress bar and percentage show real
+   progress. A failed image counts as done, so one broken file never blocks
+   the page. The Google Maps embed is not waited for.
+
+   Timing: at least MIN ms (shorter on repeat visits in the same session),
+   and never longer than MAX ms on very slow connections.
    ======================================================================= */
 (function () {
 	'use strict';
@@ -19,13 +25,26 @@
 	} catch (e) { /* storage blocked: treat as first visit */ }
 
 	var MIN = repeat ? 400 : 1400;
-	var MAX = 4000;
+	var MAX = 25000;
 	var start = Date.now();
 	var done = false;
 
+	/* ---- Progress UI ---- */
+	var shown = 0;
+	function setProgress(ratio) {
+		ratio = Math.max(shown, Math.min(1, ratio));   // never goes backwards
+		shown = ratio;
+		var bar = document.querySelector('.r2-loader__progress span');
+		var pct = document.querySelector('.r2-loader__pct');
+		if (bar) bar.style.transform = 'scaleX(' + ratio + ')';
+		if (pct) pct.textContent = Math.round(ratio * 100) + '%';
+	}
+
+	/* ---- Finish: reveal the page ---- */
 	function finish() {
 		if (done) return;
 		done = true;
+		setProgress(1);
 		var wait = Math.max(0, MIN - (Date.now() - start));
 		setTimeout(function () {
 			root.classList.add('r2-ready');
@@ -38,24 +57,38 @@
 		}, wait);
 	}
 
+	/* ---- Collect every image URL on the page ---- */
+	function imageUrls() {
+		var urls = [];
+		var seen = {};
+		function add(u) {
+			if (!u || u.indexOf('data:') === 0 || seen[u]) return;
+			seen[u] = true;
+			urls.push(u);
+		}
+		Array.prototype.forEach.call(document.images, function (img) {
+			add(img.currentSrc || img.getAttribute('src'));
+		});
+		Array.prototype.forEach.call(document.querySelectorAll('[style*="url("]'), function (el) {
+			var m = /url\(["']?([^"')]+)["']?\)/.exec(el.getAttribute('style'));
+			if (m) add(m[1]);
+		});
+		return urls;
+	}
+
+	function preload(url) {
+		return new Promise(function (resolve) {
+			var img = new Image();
+			img.onload = img.onerror = function () { resolve(); };
+			img.src = url;
+			if (img.complete) resolve();           // already cached
+		});
+	}
+
 	function whenDomReady() {
 		return new Promise(function (resolve) {
 			if (document.readyState !== 'loading') resolve();
 			else document.addEventListener('DOMContentLoaded', resolve, { once: true });
-		});
-	}
-
-	function whenHeroImage() {
-		return whenDomReady().then(function () {
-			var slide = document.querySelector('.r2-hero__slide');
-			if (!slide) return;
-			var m = /url\(["']?([^"')]+)["']?\)/.exec(slide.style.backgroundImage || '');
-			if (!m) return;
-			return new Promise(function (resolve) {
-				var img = new Image();
-				img.onload = img.onerror = resolve;
-				img.src = m[1];
-			});
 		});
 	}
 
@@ -64,10 +97,20 @@
 	}
 
 	if (typeof Promise === 'undefined') {
-		// very old browsers: just wait for load
+		// very old browsers: wait for the normal load event
 		window.addEventListener('load', finish);
 	} else {
-		Promise.all([whenDomReady(), whenFonts(), whenHeroImage()]).then(finish, finish);
+		whenDomReady().then(function () {
+			var urls = imageUrls();
+			var total = urls.length + 1;              // +1 for the fonts
+			var loaded = 0;
+			var tick = function () { loaded++; setProgress(loaded / total); };
+			setProgress(0);
+			return Promise.all(
+				urls.map(function (u) { return preload(u).then(tick); })
+					.concat([whenFonts().then(tick, tick)])
+			);
+		}).then(finish, finish);
 	}
 	setTimeout(finish, MAX);
 })();
