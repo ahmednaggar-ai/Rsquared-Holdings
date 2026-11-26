@@ -65,7 +65,8 @@
 	});
 
 	/* ---- Close everything on navigation / Esc ---- */
-	nav.querySelectorAll('a[href^="#"]').forEach(function (a) {
+	// (the "Businesses" toggle is also an <a href="#…">, but it only opens the dropdown)
+	nav.querySelectorAll('a[href^="#"]:not([aria-haspopup])').forEach(function (a) {
 		a.addEventListener('click', function () {
 			closeDropdowns();
 			if (nav.classList.contains('is-menu-open')) setMenu(false);
